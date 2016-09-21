@@ -29,6 +29,7 @@ namespace Comet
 
 
         static Screen screen;
+        static int index = 0;
         //static CursorPoint current_cusor;
         //static CursorPoint prev_cusor;
 
@@ -48,7 +49,7 @@ namespace Comet
             // hide window
             Window consoleWindow = new Window();
            consoleWindow.HideConsole(handle);
-
+            
 
             Keyboard keyboard = new Keyboard();
             Keyboard.KeyboardAction += new EventHandler(KeyboardEvent);
@@ -73,23 +74,24 @@ namespace Comet
             //current_cusor = ((Mouse.MouseEventArgs)e).CurrentPts;
             //prev_cusor = ((Mouse.MouseEventArgs)e).PrevPts;
             //var a = (uint)Mouse.wparam;
-            if (Mouse.wparam == "513") // down
+            if (Mouse.wparam == "513" && Keyboard.CurrentKeyPressed == "A") // down
             {
                 screen.CreateBox();
                 //Console.WriteLine("{0} , {1}  :  {2} , {3} : {4}", Mouse.previous.X.ToString(), Mouse.previous.Y.ToString(), Mouse.current.X.ToString(), Mouse.current.Y.ToString(), Mouse.wparam);
             }
-            if (Mouse.wparam == "512" && Mouse.LeftIsDown == true) // moving
+            if (Mouse.wparam == "512" && Mouse.LeftIsDown == true &&  Keyboard.CurrentKeyPressed == "A") // moving
             {              
                 screen.ResizeBox(Mouse.LastDown_physical_location, Mouse.current_pysical_location);
                 //Console.WriteLine("{0} , {1}  :  {2} , {3} : {4}", Mouse.previous.X.ToString(), Mouse.previous.Y.ToString(), Mouse.current.X.ToString(), Mouse.current.Y.ToString(), Mouse.wparam);
             }
 
-            if (Mouse.wparam == "514") // up
+            if (Mouse.wparam == "514" && Keyboard.CurrentKeyPressed == "A") // up
             {
                 //Console.WriteLine("{0} , {1}  :  {2} , {3} : {4}", Mouse.previous.X.ToString(), Mouse.previous.Y.ToString(), Mouse.current.X.ToString(), Mouse.current.Y.ToString(), Mouse.wparam);
                 screen.CloseBox();
-                screen.Capture(0, @"C:\Users\derek.mckee\Desktop\img", Mouse.LastDown_physical_location, Mouse.LastUp_physical_location);
-
+                screen.CaptureSave(index, @"C:\Users\derek.mckee\Desktop\img", Mouse.LastDown_physical_location, Mouse.LastUp_physical_location);
+                Keyboard.CurrentKeyPressed = "";
+                index++;
             }
 
         }
@@ -98,15 +100,18 @@ namespace Comet
         {
             /*Console.WriteLine(((Keyboard.KeyboardEventArgs)e).Data)*/;
 
-            var a = ((Keyboard.KeyboardEventArgs)e).Data;
-            if ( a.ToString() == "C")
+             var a = ((Keyboard.KeyboardEventArgs)e).Data;
+            if ( a.ToString() == "Space")
             {
-                //screen.Capture(0, @"C:\Users\derek.mckee\Desktop\img");
+                //screen.CaptureApp();
+                screen.CaptureAppMenu();
             }
             if (a.ToString() == "A")
             {
+                screen.CreateCover(0);
                 //screen.Draw(Mouse.previous, Mouse.current);
             }
+
 
 
         }

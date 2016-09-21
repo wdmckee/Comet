@@ -35,7 +35,7 @@ namespace Comet
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         internal static extern bool GetCursorPos(ref CursorPoint lpPoint);
 
-
+  
 
         #endregion
 

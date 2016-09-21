@@ -75,7 +75,7 @@ namespace Comet
 
 
 
-
+        public static string CurrentKeyPressed;
 
 
 
@@ -106,7 +106,9 @@ namespace Comet
             {
                 int vkCode = Marshal.ReadInt32(lParam);
 
-                KeyboardAction(null, new KeyboardEventArgs(((Keys)vkCode).ToString()));
+                CurrentKeyPressed = ((Keys)vkCode).ToString();
+
+                KeyboardAction(null, new KeyboardEventArgs(CurrentKeyPressed));
 
                 
             }
