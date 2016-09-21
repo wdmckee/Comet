@@ -32,6 +32,9 @@ namespace Comet
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         internal static extern bool GetPhysicalCursorPos(ref CursorPoint lpPoint);
 
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        internal static extern bool GetCursorPos(ref CursorPoint lpPoint);
+
 
 
         #endregion
@@ -62,18 +65,43 @@ namespace Comet
 
         public class MouseEventArgs : EventArgs
         {
-            private string m_Data;
-            public MouseEventArgs(string _myData)
+            private CursorPoint m_PrevPts;
+            private CursorPoint m_CurrentPts;
+            public MouseEventArgs(CursorPoint _CurrentPts, CursorPoint _PrevPts)
             {
-                m_Data = _myData;
+                m_CurrentPts = _CurrentPts;
+                m_PrevPts = _PrevPts;
             } // eo ctor
 
-            public string Data { get { return m_Data; } }
+           
+            public CursorPoint CurrentPts { get { return m_CurrentPts; } }
+            public CursorPoint PrevPts { get { return m_PrevPts; } }
         }
         #endregion
 
+        public static CursorPoint current_pysical_location { get; set; }
+        public static CursorPoint previous_physical_location { get; set; }
+
+        public static CursorPoint LastDown_physical_location { get; set; }
+        public static CursorPoint LastUp_physical_location { get; set; }
 
 
+
+
+        public static CursorPoint current_location { get; set; }
+        public static CursorPoint previous_location { get; set; }
+
+        public static CursorPoint LastDown_location { get; set; }
+        public static CursorPoint LastUp_location { get; set; }
+
+
+
+
+
+
+        public static bool LeftIsDown { get; set; }
+
+        public static string wparam { get; set; }
 
         #region Methods
 
@@ -81,6 +109,8 @@ namespace Comet
         public Mouse()
         {
             var retVal = SetHook(_proc);
+            current_pysical_location = new CursorPoint();
+            previous_physical_location = new CursorPoint();
         }
 
 
@@ -99,9 +129,45 @@ namespace Comet
         {
             //if (nCode >= 0 && MouseMessages.WM_LBUTTONDOWN == (MouseMessages)wParam)
             //{
-                MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
-            //MouseAction(null, new EventArgs());
-            MouseAction(null, new MouseEventArgs(hookStruct.pt.X.ToString()));
+
+            MSLLHOOKSTRUCT hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
+            
+            previous_physical_location = current_pysical_location;
+            current_pysical_location = hookStruct.pt;
+
+            previous_location = current_location;
+            current_location = hookStruct.pt;
+
+            CursorPoint lpp = new Comet.CursorPoint();
+            Mouse.GetPhysicalCursorPos(ref lpp);
+
+            CursorPoint lp = new Comet.CursorPoint();
+            Mouse.GetCursorPos(ref lp);
+
+            current_pysical_location =  lpp;
+            current_location = lp;
+
+
+
+
+
+
+            wparam = wParam.ToString();
+
+            if (wparam == "513")
+            {              
+                LastDown_physical_location = current_pysical_location;
+                LastDown_location = current_location;
+                LeftIsDown = true;
+            }
+            if (wparam == "514")
+            {
+                LastUp_physical_location = current_pysical_location;
+                LastUp_location = current_location;
+                LeftIsDown = false;
+            }
+
+            MouseAction(null, new MouseEventArgs(current_pysical_location, previous_physical_location));
             
           //  }
 
@@ -145,6 +211,14 @@ namespace Comet
         {
             CursorPoint cursorPos = new CursorPoint();
             GetPhysicalCursorPos(ref cursorPos);
+            return cursorPos;
+
+        }
+
+        public CursorPoint GetLocation()
+        {
+            CursorPoint cursorPos = new CursorPoint();
+            GetCursorPos(ref cursorPos);
             return cursorPos;
 
         }
