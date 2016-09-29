@@ -192,7 +192,7 @@ namespace Comet
 
 
 
-        public void CaptureSave(int index, string path, CursorPoint from, CursorPoint to)
+        public void CaptureSave(string path, CursorPoint from, CursorPoint to)
         {
 
             var x = from.X;/// 2;
@@ -211,8 +211,8 @@ namespace Comet
                     {
                         g.CopyFromScreen(new Point(bounds.Left, bounds.Top), Point.Empty, bounds.Size);
                     }
-                    var fullpath = string.Format("{0}\\{1}.bmp", path, index);
-                    bitmap.Save(fullpath, ImageFormat.Bmp);
+                    
+                    bitmap.Save(path, ImageFormat.Bmp);
                 }
             }
 
@@ -240,15 +240,15 @@ namespace Comet
                         g.CopyFromScreen(new Point(bounds.Left, bounds.Top), Point.Empty, bounds.Size);
                     }
                     retValue = (Bitmap)bitmap.Clone();
-                    var fullpath = string.Format("{0}\\{1}.bmp", @"C:\Users\derek.mckee\Desktop\img", 99);
-                    retValue.Save(fullpath, ImageFormat.Bmp);
+                  
+                   // retValue.Save(path, ImageFormat.Bmp);
                 }
             }
 
             return retValue;
         }
 
-        public Bitmap CaptureApp()
+        public Bitmap CaptureApp(string path)
         {
             RECT rc;
             IntPtr hwnd = GetForegroundWindow();
@@ -263,9 +263,8 @@ namespace Comet
             gfxBmp.ReleaseHdc(hdcBitmap);
             gfxBmp.Dispose();
 
-
-            var fullpath = string.Format("{0}\\{1}.bmp", @"C:\Users\derek.mckee\Desktop\img", 99);
-            bmp.Save(fullpath, ImageFormat.Bmp);
+            
+            bmp.Save(path, ImageFormat.Bmp);
 
 
             return bmp;
@@ -299,7 +298,7 @@ namespace Comet
             //return retValue;
         }
 
-        public Bitmap CaptureAppMenu()
+        public Bitmap CaptureAppMenu(string path)
         {
             //RECT rc;
             //IntPtr handle = GetForegroundWindow();
@@ -324,8 +323,8 @@ namespace Comet
                         g.CopyFromScreen(new Point(rc.Left*2+10, rc.Top*2-2), Point.Empty, new Size(bmp.Width-21, bmp.Height-10));
                     }
                    
-                    var fullpath = string.Format("{0}\\{1}.bmp", @"C:\Users\derek.mckee\Desktop\img", 98);
-                    bmp.Save(fullpath, ImageFormat.Bmp);
+                   
+                    bmp.Save(path, ImageFormat.Bmp);
                 }
           
 

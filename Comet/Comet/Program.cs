@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -30,14 +31,17 @@ namespace Comet
 
         static Screen screen;
         static int index = 0;
+        static DateTime today = DateTime.Today;
+        static string outputpath;
         //static CursorPoint current_cusor;
         //static CursorPoint prev_cusor;
 
-        
+
 
         static void Main(string[] args)
         {
             screen = new Screen();
+            
             //current_cusor = new CursorPoint();
             //prev_cusor = new CursorPoint();
 
@@ -89,7 +93,7 @@ namespace Comet
             {
                 //Console.WriteLine("{0} , {1}  :  {2} , {3} : {4}", Mouse.previous.X.ToString(), Mouse.previous.Y.ToString(), Mouse.current.X.ToString(), Mouse.current.Y.ToString(), Mouse.wparam);
                 screen.CloseBox();
-                screen.CaptureSave(index, @"C:\Users\derek.mckee\Desktop\img", Mouse.LastDown_physical_location, Mouse.LastUp_physical_location);
+                screen.CaptureSave( GetPath(), Mouse.LastDown_physical_location, Mouse.LastUp_physical_location);
                 Keyboard.CurrentKeyPressed = "";
                 index++;
             }
@@ -104,12 +108,17 @@ namespace Comet
             if ( a.ToString() == "Space")
             {
                 //screen.CaptureApp();
-                screen.CaptureAppMenu();
+                screen.CaptureAppMenu(GetPath());
+                index++;
             }
             if (a.ToString() == "A")
             {
                 screen.CreateCover(0);
                 //screen.Draw(Mouse.previous, Mouse.current);
+            }
+            if (a.ToString() == "Z")
+            {
+                Application.Exit();
             }
 
 
@@ -118,7 +127,14 @@ namespace Comet
 
 
 
+        internal static string GetPath()
+        {
+            var outputpath = string.Format("{0}\\{1}\\{2}.bmp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), today.ToString("yyyyMMdd"), index);
+            DirectoryInfo di = Directory.CreateDirectory(Path.GetDirectoryName(outputpath));
 
+            return outputpath;
+
+        }
 
 
 
