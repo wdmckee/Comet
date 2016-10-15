@@ -105,22 +105,29 @@ namespace Comet
             /*Console.WriteLine(((Keyboard.KeyboardEventArgs)e).Data)*/;
 
              var a = ((Keyboard.KeyboardEventArgs)e).Data;
-            if ( a.ToString() == "Space")
+            if ( a.ToString() == "D1")
             {
                 //screen.CaptureApp();
                 screen.CaptureAppMenu(GetPath());
                 index++;
             }
-            if (a.ToString() == "A")
+            if (a.ToString() == "D2")
             {
-                screen.CreateCover(0);
+                Image i = new Image();
+                i.ShowDiff("", GetDirectory());
+                
                 //screen.Draw(Mouse.previous, Mouse.current);
             }
-            if (a.ToString() == "Z")
+          
+            if (a.ToString() == "D3")
+            {
+                screen.CreateCover(0);
+            }
+            if (a.ToString() == "D4")
             {
                 Application.Exit();
+                Environment.Exit(0);
             }
-
 
 
         }
@@ -130,6 +137,15 @@ namespace Comet
         internal static string GetPath()
         {
             var outputpath = string.Format("{0}\\{1}\\{2}.bmp", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), today.ToString("yyyyMMdd"), index);
+            DirectoryInfo di = Directory.CreateDirectory(Path.GetDirectoryName(outputpath));
+
+            return outputpath;
+
+        }
+
+        internal static string GetDirectory()
+        {
+            var outputpath = string.Format("{0}\\{1}", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), today.ToString("yyyyMMdd"), index);
             DirectoryInfo di = Directory.CreateDirectory(Path.GetDirectoryName(outputpath));
 
             return outputpath;
