@@ -33,6 +33,7 @@ namespace Comet
         static int index = 0;
         static DateTime today = DateTime.Today;
         static string outputpath;
+        static int _lockonMouse = 0;
         //static CursorPoint current_cusor;
         //static CursorPoint prev_cusor;
 
@@ -78,25 +79,40 @@ namespace Comet
             //current_cusor = ((Mouse.MouseEventArgs)e).CurrentPts;
             //prev_cusor = ((Mouse.MouseEventArgs)e).PrevPts;
             //var a = (uint)Mouse.wparam;
+            //Console.WriteLine("current: {0} {1}", Keyboard.CurrentKeyPressed, Keyboard.PriorKeyPressed);
             if (Mouse.wparam == "513" && Keyboard.CurrentKeyPressed == "A") // down
             {
-                screen.CreateBox();
+                screen.CreateUI();
                 //Console.WriteLine("{0} , {1}  :  {2} , {3} : {4}", Mouse.previous.X.ToString(), Mouse.previous.Y.ToString(), Mouse.current.X.ToString(), Mouse.current.Y.ToString(), Mouse.wparam);
             }
             if (Mouse.wparam == "512" && Mouse.LeftIsDown == true &&  Keyboard.CurrentKeyPressed == "A") // moving
             {              
-                screen.ResizeBox(Mouse.LastDown_physical_location, Mouse.current_pysical_location);
-                //Console.WriteLine("{0} , {1}  :  {2} , {3} : {4}", Mouse.previous.X.ToString(), Mouse.previous.Y.ToString(), Mouse.current.X.ToString(), Mouse.current.Y.ToString(), Mouse.wparam);
+                screen.ResizeUI(Mouse.LastDown_physical_location, Mouse.current_pysical_location);                
             }
 
             if (Mouse.wparam == "514" && Keyboard.CurrentKeyPressed == "A") // up
-            {
-                //Console.WriteLine("{0} , {1}  :  {2} , {3} : {4}", Mouse.previous.X.ToString(), Mouse.previous.Y.ToString(), Mouse.current.X.ToString(), Mouse.current.Y.ToString(), Mouse.wparam);
+            {              
                 screen.CloseBox();
                 screen.CaptureSave( GetPath(), Mouse.LastDown_physical_location, Mouse.LastUp_physical_location);
                 Keyboard.CurrentKeyPressed = "";
                 index++;
             }
+
+            if ((Mouse.wparam == "513" || Mouse.wparam == "514") && Keyboard.CurrentKeyPressed == "LShiftKey" && Keyboard.PriorKeyPressed == "LControlKey")   //_lockonMouse== 1) // down
+            {
+                screen.CaptureAppMenu(GetPath());
+                index++;
+
+            }
+            if ((Mouse.wparam == "513" ) && Keyboard.CurrentKeyPressed == "LControlKey")   //_lockonMouse== 1) // down
+            {
+                screen.CaptureAppMenu(GetPath());
+                index++;
+
+            }
+
+
+
 
         }
 
@@ -104,22 +120,26 @@ namespace Comet
         {
             /*Console.WriteLine(((Keyboard.KeyboardEventArgs)e).Data)*/;
 
-             var a = ((Keyboard.KeyboardEventArgs)e).Data;
-            if ( a.ToString() == "Space")
-            {
-                //screen.CaptureApp();
-                screen.CaptureAppMenu(GetPath());
-                index++;
-            }
-            if (a.ToString() == "A")
-            {
-                screen.CreateCover(0);
-                //screen.Draw(Mouse.previous, Mouse.current);
-            }
-            if (a.ToString() == "Z")
-            {
-                Application.Exit();
-            }
+            var a = ((Keyboard.KeyboardEventArgs)e).Data;
+            //var b = Keyboard.CurrentKeyPressed;
+            //var c = Keyboard.LastKeyPressed;
+            //if (Keyboard.CurrentKeyPressed == "Space" && Keyboard.LastKeyPressed == "LShiftKey")
+            //{
+            //    screen.CaptureAppMenu(GetPath());
+            //    index++;
+            //}
+            //if (a.ToString() == "A")
+            //{
+            //    screen.CreateCover(0);              
+            //}
+            //if (a.ToString() == "X")
+            //{
+            //    _lockonMouse = (_lockonMouse == 1? 0:1);// toggle
+            //}
+            //if (a.ToString() == "Z")
+            //{
+            //    Application.Exit();
+            //}
 
 
 

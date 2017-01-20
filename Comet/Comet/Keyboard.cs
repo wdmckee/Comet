@@ -40,6 +40,7 @@ namespace Comet
 
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
+        private const int WM_KEYUP = 0x0101;
 
         private static LowLevelKeyboardProc _proc = HookCallback;
         private static IntPtr _hookID = IntPtr.Zero;
@@ -76,7 +77,7 @@ namespace Comet
 
 
         public static string CurrentKeyPressed;
-
+        public static string PriorKeyPressed;
 
 
 
@@ -106,11 +107,17 @@ namespace Comet
             {
                 int vkCode = Marshal.ReadInt32(lParam);
 
+                PriorKeyPressed = ( ((Keys)vkCode).ToString() == CurrentKeyPressed ? PriorKeyPressed : CurrentKeyPressed); // prevents rapid fire from messing with logic
                 CurrentKeyPressed = ((Keys)vkCode).ToString();
+                
 
                 KeyboardAction(null, new KeyboardEventArgs(CurrentKeyPressed));
 
                 
+            }
+            if (nCode >= 0 && wParam == (IntPtr)WM_KEYUP)
+            {
+                CurrentKeyPressed = null;
             }
                 /*
                 IntPtr win = GetForegroundWindow();

@@ -73,6 +73,54 @@ namespace Comet
 
 
 
+
+
+
+        #region SVG Additions
+        public void CreateUI()
+        {
+
+
+            formBox = new Form();
+            formBox.FormBorderStyle = FormBorderStyle.None;
+            formBox.ShowInTaskbar = false;
+
+            formBox.Opacity = .1;
+            formBox.Height = 100; formBox.Width = 100;
+            formBox.Show();
+
+        }
+
+
+
+
+
+
+        public void ResizeUI(CursorPoint from, CursorPoint to)
+        {
+            formCover.BringToFront();
+            formBox.BringToFront();
+            var x = from.X;
+            var y = from.Y;
+
+            var x1 = to.X;
+            var y1 = to.Y;
+
+            formBox.Location = new Point(x, y);
+            formBox.Opacity = .1;
+            formBox.Height = y1 - y;
+            formBox.Width = x1 - x;
+
+        }
+
+
+
+
+        #endregion
+
+
+
+
         public void CreateCover(int freezeFlag)
         {
             if (formCover == null)
